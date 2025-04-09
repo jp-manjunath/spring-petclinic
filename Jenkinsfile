@@ -3,6 +3,7 @@ pipeline {
   agent any
    tools {
         maven 'Maven' // This should match the name configured in "Global Tool Configuration"
+        dockerTool 'Docker'
     }
   stages {
 //	 stage('Checkout') {
@@ -10,6 +11,11 @@ pipeline {
 //                git branch: 'main', url: 'https://github.com/jp-manjunath/spring-petclinic.git'
 //            }
 //        }
+stage('Check Docker') {
+      steps {
+        sh 'docker --version'
+      }
+    }
     stage('Maven Install') {
       steps {
         sh 'mvn clean install'
