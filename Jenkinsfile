@@ -9,16 +9,6 @@ pipeline {
         dockerTool 'Docker'
     }
   stages {
-//	 stage('Checkout') {
-//            steps {
-//                git branch: 'main', url: 'https://github.com/jp-manjunath/spring-petclinic.git'
-//            }
-//        }
-stage('Check Docker') {
-      steps {
-        sh 'docker --version'
-      }
-    }
     stage('Maven Install') {
       steps {
         sh 'mvn clean install'
@@ -27,24 +17,17 @@ stage('Check Docker') {
     stage('Docker Build') {
       steps {
 		sh 'docker --version'
+        // Build and tag with build number
         sh "docker build -t manjunathjp245/spring-petclinic:${env.BUILD_NUMBER} ."
+        // Tag with 'latest'
+        sh "docker tag manjunathjp245/spring-petclinic:${env.BUILD_NUMBER} manjunathjp245/spring-petclinic:latest"
       }
     }
-//    stage('Docker Push') {
-//      agent any
-//      steps {
-//        withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-//          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-//          sh 'docker push manjunathjp245/spring-petclinic:latest'
-//        }
-//      }
-//  }
-  
   stage('Docker Push') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
       sh "echo $dockerHubPassword | docker login -u $dockerHubUser --password-stdin"
-      sh "docker push xxxxxx/spring-petclinic:${env.BUILD_NUMBER}"
+      sh "docker push manjunathjp245/spring-petclinic:${env.BUILD_NUMBER}"
     }
   }
 }
