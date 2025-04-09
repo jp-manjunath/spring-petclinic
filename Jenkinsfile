@@ -1,6 +1,9 @@
 #!groovy
 pipeline {
-  agent none
+  agent any
+   tools {
+        maven 'Maven' // This should match the name configured in "Global Tool Configuration"
+    }
   stages {
 //	 stage('Checkout') {
 //            steps {
