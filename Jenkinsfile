@@ -1,6 +1,9 @@
 #!groovy
 pipeline {
   agent any
+  options {
+        skipStagesAfterUnstable()
+    }
    tools {
         maven 'Maven' // This should match the name configured in "Global Tool Configuration"
         dockerTool 'Docker'
@@ -23,6 +26,7 @@ stage('Check Docker') {
     }
     stage('Docker Build') {
       steps {
+		sh 'docker --version'
         sh "docker build -t manjunathjp245/spring-petclinic:${env.BUILD_NUMBER} ."
       }
     }
