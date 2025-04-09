@@ -2,6 +2,11 @@
 pipeline {
   agent none
   stages {
+	 stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/jp-manjunath/spring-petclinic.git'
+            }
+        }
     stage('Maven Install') {
       agent {
         docker {
@@ -15,7 +20,7 @@ pipeline {
     stage('Docker Build') {
       agent any
       steps {
-        sh 'docker build -t manjunathjp245/spring-petclinic:latest .'
+        sh 'docker build -t manjunathjp245/spring-petclinic:${env.BUILD_NUMBER} .'
       }
     }
   }
