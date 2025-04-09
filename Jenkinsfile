@@ -2,11 +2,11 @@
 pipeline {
   agent none
   stages {
-	 stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/jp-manjunath/spring-petclinic.git'
-            }
-        }
+//	 stage('Checkout') {
+//            steps {
+//                git branch: 'main', url: 'https://github.com/jp-manjunath/spring-petclinic.git'
+//            }
+//        }
     stage('Maven Install') {
       agent {
         docker {
