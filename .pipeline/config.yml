@@ -1,0 +1,6 @@
+stages:
+  Build:
+    mavenExecuteStaticCodeChecks: true
+    mavenExecuteIntegration: false
+  Additional:
+    dockerImage: manjunathjp245/spring-petclinic
