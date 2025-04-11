@@ -14,17 +14,25 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup SAP Piper
-      uses: SAP/project-piper-action@v1
-
     - name: Run Piper Maven Build
-      run: piper mavenBuild
+      run: |
+        docker run --rm \
+          -v "$PWD":/workspace \
+          -v "$HOME/.m2":/root/.m2 \
+          -w /workspace \
+          ppiper/docker-image:latest \
+          piper mavenBuild
 
-    - name: Docker Login
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-      run: piper dockerLogin
 
-    - name: Docker Build + Push
-      run: piper dockerBuild
+    - name: Docker Login (for Push)
+      run: |
+        echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+    - name: Run Docker Build + Push with Piper
+      run: |
+        docker run --rm \
+          -v "$PWD":/workspace \
+          -v "$HOME/.docker":/root/.docker \
+          -w /workspace \
+          ppiper/docker-image:latest \
+          piper dockerBuild
