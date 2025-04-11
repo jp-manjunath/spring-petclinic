@@ -1,0 +1,30 @@
+name: SAP Project Piper CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  piper:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup SAP Piper
+      uses: SAP/project-piper-action@v1
+
+    - name: Run Piper Maven Build
+      run: piper mavenBuild
+
+    - name: Docker Login
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      run: piper dockerLogin
+
+    - name: Docker Build + Push
+      run: piper dockerBuild
