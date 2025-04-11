@@ -1,0 +1,12 @@
+general:
+  productiveBranch: 'main'
+
+steps:
+  mavenBuild:
+    dockerImage: 'maven:3.8.7-eclipse-temurin-17-alpine'
+    projectSettingsFile: '.pipeline/settings.xml'
+    m2Path: '.m2'
+  dockerBuild:
+    dockerfilePath: './Dockerfile'
+    dockerImageName: 'manjunathjp245/spring-petclinic'
+    dockerRegistry: 'https://index.docker.io/v1/'
