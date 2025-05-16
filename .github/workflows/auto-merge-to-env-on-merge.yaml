@@ -1,4 +1,4 @@
-name: PLR Automerge to env branches on merge to trunk
+name: Automerge to env branches on merge to trunk
 
 on:
   pull_request:
