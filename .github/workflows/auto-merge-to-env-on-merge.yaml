@@ -34,5 +34,5 @@ jobs:
           git fetch origin main
           git fetch origin ${{ vars.DEPLOYMENT_BRANCH }}
           git checkout ${{ vars.DEPLOYMENT_BRANCH }}
-          git rebase origin/develop -Xours || (git rebase --abort && exit 1)
+          git rebase origin/main -Xours || (git rebase --abort && exit 1)
           git push --force-with-lease origin ${{ vars.DEPLOYMENT_BRANCH }}
