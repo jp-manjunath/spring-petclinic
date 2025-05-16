@@ -1,0 +1,38 @@
+name: PLR Automerge to env branches on merge to trunk
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [ closed ]
+
+jobs:
+
+  Automerge:
+
+    if: github.event.pull_request.merged == true
+
+    strategy:
+        matrix:
+          environment: [DEV]
+
+    runs-on: [ self-hosted ]
+    environment: ${{ matrix.environment }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "<>"
+
+      - name: Sync with branch
+        run: |
+          git fetch origin main
+          git fetch origin ${{ vars.DEPLOYMENT_BRANCH }}
+          git checkout ${{ vars.DEPLOYMENT_BRANCH }}
+          git rebase origin/develop -Xours || (git rebase --abort && exit 1)
+          git push --force-with-lease origin ${{ vars.DEPLOYMENT_BRANCH }}
